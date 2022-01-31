@@ -27,14 +27,10 @@ func LoadImageConfig(r io.Reader) (image.Config, error) {
 
 func VideoToHLS(input, output, fmpgBinPath, fprbBinPath string) (string, error){
 	if output == ""{output = input}
-	outExt := strings.TrimLeft(filepath.Ext(output), ".")
-	if outExt != "m3u8"{
+	outExt := filepath.Ext(output)
+	if outExt != ".m3u8"{
 		output = strings.TrimRight(output, outExt)
-		if outExt == ""{
-			output += ".m3u8"
-		}else{
-			output += "m3u8"
-		}
+		output += ".m3u8"
 	}
 
 	opts := ffmpeg.Options{
