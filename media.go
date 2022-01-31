@@ -30,7 +30,11 @@ func VideoToHLS(input, output, fmpgBinPath, fprbBinPath string) (string, error){
 	outExt := strings.TrimLeft(filepath.Ext(output), ".")
 	if outExt != "m3u8"{
 		output = strings.TrimRight(output, outExt)
-		output += "m3u8"
+		if outExt == ""{
+			output += ".m3u8"
+		}else{
+			output += "m3u8"
+		}
 	}
 
 	opts := ffmpeg.Options{
