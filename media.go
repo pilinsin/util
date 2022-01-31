@@ -1,14 +1,15 @@
 package util
 
 import (
-	_ "golang.org/x/image/bmp"
-	_ "golang.org/x/image/tiff"
-	_ "golang.org/x/image/vp8l"
-	_ "golang.org/x/image/webp"
+	"fmt"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
+	_ "golang.org/x/image/bmp"
+	_ "golang.org/x/image/tiff"
+	_ "golang.org/x/image/vp8l"
+	_ "golang.org/x/image/webp"
 	"io"
 
 	"path/filepath"
@@ -45,6 +46,9 @@ func VideoToHLS(input, output, fmpgBinPath, fprbBinPath string) (string, error){
 		FfprobeBinPath: fprbBinPath,
 		ProgressEnabled: true,
 	}
-	_, err := ffmpeg.New(conf).Input(input).Output(output).WithOptions(opts).Start(opts)
+	progress, err := ffmpeg.New(conf).Input(input).Output(output).WithOptions(opts).Start(opts)
+	for msg := range progress{
+		fmt.Println(msg)
+	}
 	return output, err
 }
