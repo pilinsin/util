@@ -9,6 +9,7 @@ import (
 
 func main() {
 	data := []byte("meow meow ^.^")
+
 	crypto.SelectedPubEncMode = crypto.Sidh
 	exampleEncrypt(data)
 	crypto.SelectedPubEncMode = crypto.Ntru

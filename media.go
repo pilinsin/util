@@ -27,11 +27,22 @@ func LoadImageConfig(r io.Reader) (image.Config, error) {
 }
 
 func VideoToHLS(input, output, fmpgBinPath, fprbBinPath string) (string, error){
+	return videoToHLS(input, output, fmpgBinPath, fprbBinPath, false, false)
+}
+func VideoToSilentHLS(input, output, fmpgBinPath, fprbBinPath string) (string, error){
+	return videoToHLS(input, output, fmpgBinPath, fprbBinPath, true, false)
+}
+func VideoToAudioHLS(input, output, fmpgBinPath, fprbBinPath string) (string, error){
+	return videoToHLS(input, output, fmpgBinPath, fprbBinPath, false, true)
+}
+func videoToHLS(input, output, fmpgBinPath, fprbBinPath string, skipA, skipV bool) (string, error){
 	if output == ""{output = input}
 	outExt := filepath.Ext(output)
-	if outExt != ".m3u8"{
-		output = strings.TrimRight(output, outExt)
-		output += ".m3u8"
+	outNoExt := strings.TrimRight(output, outExt)
+	if skipV{
+		output = outNoExt + ".m4a"
+	}else{
+		output = outNoExt + ".m3u8"
 	}
 
 	opts := ffmpeg.Options{
@@ -40,7 +51,16 @@ func VideoToHLS(input, output, fmpgBinPath, fprbBinPath string) (string, error){
 		AudioCodec: StrPtr("copy"),
 		HlsSegmentDuration: IntPtr(10),
 		HlsListSize: IntPtr(0),
+		HlsSegmentFilename: StrPtr(outNoExt + "_%3d.ts"),
 	}
+	if skipA{
+		opts.SkipAudio = &skipA
+	}
+	if skipV{
+		opts.SkipVideo = &skipV
+		opts.HlsSegmentFilename = StrPtr(outNoExt + "_%3d.m4a")
+	}
+	fmt.Println(opts.GetStrArguments())
 	conf := &ffmpeg.Config{
 		FfmpegBinPath: fmpgBinPath,
 		FfprobeBinPath: fprbBinPath,
