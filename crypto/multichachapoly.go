@@ -11,7 +11,7 @@ func multiSeedPadding(seed []byte) []byte {
 	for salt_idx, seed_idx := range indices {
 		salt[salt_idx] = seed[seed_idx]
 	}
-	return HashWithSize(seed, salt, uint32(paddedSize))
+	return HashWithSize(seed, salt, paddedSize)
 }
 func splitMultiSharedKeySeed(seed []byte) [][SharedKeySize]byte {
 	if len(seed)%SharedKeySize != 0 {
