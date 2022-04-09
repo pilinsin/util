@@ -1,0 +1,28 @@
+syntax = "proto3";
+package pb;
+option go_package = "./";
+
+message Key{
+	bytes data = 1;
+}
+
+message BlissSignKey{
+	bytes data = 1;
+	bytes seed = 2;
+}
+
+message MultiChachaKey{
+	repeated bytes seeds = 1;
+}
+
+message OqsPriKey{
+	bytes 	data	= 1;
+	string	mode 	= 2;
+	int32	size	= 3;
+}
+
+message OqsKey{
+	bytes	data	= 1;
+	string	mode	= 2;
+}
+

@@ -1,6 +1,9 @@
 package crypto
 
 import (
+	pb "github.com/pilinsin/util/crypto/pb"
+	proto "google.golang.org/protobuf/proto"
+
 	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"github.com/pilinsin/util"
 )
@@ -54,8 +57,12 @@ func (pri *oqsPriKey) Decrypt(m []byte) ([]byte, error) {
 	}
 	cipher, enc := m[:pri.cipherSize], m[pri.cipherSize:]
 
+	priKey := make([]byte, len(pri.priKey))
+	copy(priKey, pri.priKey)
+	mode := pri.mode
+
 	oqsMan := oqs.KeyEncapsulation{}
-	if err := oqsMan.Init(pri.mode, pri.priKey); err != nil {
+	if err := oqsMan.Init(mode, priKey); err != nil {
 		return nil, err
 	}
 	defer oqsMan.Clean()
@@ -65,30 +72,23 @@ func (pri *oqsPriKey) Decrypt(m []byte) ([]byte, error) {
 	}
 	return newMultiChaChaSharedKey(share).Decrypt(enc)
 }
-func (pri *oqsPriKey) Equals(pri2 IPriKey) bool {
-	return util.ConstTimeBytesEqual(pri.Marshal(), pri2.Marshal())
-}
-func (pri *oqsPriKey) Marshal() []byte {
-	mpri := &struct {
-		Pr []byte
-		M  string
-		S  int
-	}{pri.priKey, pri.mode, pri.cipherSize}
-	m, _ := util.Marshal(mpri)
-	return m
+func (pri *oqsPriKey) Raw() ([]byte, error) {
+	mpri := &pb.OqsPriKey{
+		Data: pri.priKey,
+		Mode: pri.mode,
+		Size: int32(pri.cipherSize),
+	}
+	m, err := proto.Marshal(mpri)
+	return m, err
 }
 func (pri *oqsPriKey) Unmarshal(m []byte) error {
-	mpri := &struct {
-		Pr []byte
-		M  string
-		S  int
-	}{}
-	if err := util.Unmarshal(m, mpri); err != nil {
+	mpri := &pb.OqsPriKey{}
+	if err := proto.Unmarshal(m, mpri); err != nil {
 		return err
 	}
-	pri.priKey = mpri.Pr
-	pri.mode = mpri.M
-	pri.cipherSize = mpri.S
+	pri.priKey = mpri.GetData()
+	pri.mode = mpri.GetMode()
+	pri.cipherSize = int(mpri.GetSize())
 	return nil
 }
 
@@ -98,8 +98,9 @@ type oqsPubKey struct {
 }
 
 func (pub *oqsPubKey) Encrypt(data []byte) ([]byte, error) {
+	mode := pub.mode
 	oqsMan := oqs.KeyEncapsulation{}
-	if err := oqsMan.Init(pub.mode, nil); err != nil {
+	if err := oqsMan.Init(mode, nil); err != nil {
 		return nil, err
 	}
 	defer oqsMan.Clean()
@@ -110,26 +111,20 @@ func (pub *oqsPubKey) Encrypt(data []byte) ([]byte, error) {
 	enc, err := newMultiChaChaSharedKey(share).Encrypt(data)
 	return append(cipher, enc...), err
 }
-func (pub *oqsPubKey) Equals(pub2 IPubKey) bool {
-	return util.ConstTimeBytesEqual(pub.Marshal(), pub2.Marshal())
-}
-func (pub *oqsPubKey) Marshal() []byte {
-	mpub := &struct {
-		Pu []byte
-		M  string
-	}{pub.pubKey, pub.mode}
-	m, _ := util.Marshal(mpub)
-	return m
+func (pub *oqsPubKey) Raw() ([]byte, error) {
+	mpub := &pb.OqsKey{
+		Data: pub.pubKey,
+		Mode: pub.mode,
+	}
+	m, err := proto.Marshal(mpub)
+	return m, err
 }
 func (pub *oqsPubKey) Unmarshal(m []byte) error {
-	mpub := &struct {
-		Pu []byte
-		M  string
-	}{}
-	if err := util.Unmarshal(m, mpub); err != nil {
+	mpub := &pb.OqsKey{}
+	if err := proto.Unmarshal(m, mpub); err != nil {
 		return err
 	}
-	pub.pubKey = mpub.Pu
-	pub.mode = mpub.M
+	pub.pubKey = mpub.GetData()
+	pub.mode = mpub.GetMode()
 	return nil
 }

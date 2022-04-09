@@ -1,18 +1,20 @@
 package crypto
 
+type iBaseKey interface{
+	Raw() ([]byte, error)
+}
+
 type ISignKeyPair interface {
 	Sign() ISignKey
 	Verify() IVerfKey
 }
 type ISignKey interface {
+	iBaseKey
 	Sign(m []byte) ([]byte, error)
-	Equals(sk2 ISignKey) bool
-	Marshal() []byte
 }
 type IVerfKey interface {
+	iBaseKey
 	Verify(data, sign []byte) (bool, error)
-	Equals(vk2 IVerfKey) bool
-	Marshal() []byte
 }
 
 type IPubEncryptKeyPair interface {
@@ -20,19 +22,16 @@ type IPubEncryptKeyPair interface {
 	Private() IPriKey
 }
 type IPriKey interface {
+	iBaseKey
 	Decrypt(m []byte) ([]byte, error)
-	Equals(pri2 IPriKey) bool
-	Marshal() []byte
 }
 type IPubKey interface {
+	iBaseKey
 	Encrypt(data []byte) ([]byte, error)
-	Equals(pub2 IPubKey) bool
-	Marshal() []byte
 }
 
 type ISharedKey interface {
+	iBaseKey
 	Encrypt(data []byte) ([]byte, error)
 	Decrypt(m []byte) ([]byte, error)
-	Equals(key2 ISharedKey) bool
-	Marshal() []byte
 }

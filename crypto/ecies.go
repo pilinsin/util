@@ -2,8 +2,6 @@ package crypto
 
 import (
 	eciesgo "github.com/ecies/go"
-
-	"github.com/pilinsin/util"
 )
 
 type eciesPubKey struct {
@@ -42,15 +40,8 @@ func (key *eciesPriKey) Decrypt(enc []byte) ([]byte, error) {
 	return eciesgo.Decrypt(key.priKey, enc)
 }
 
-func (key *eciesPubKey) Equals(key2 IPubKey) bool {
-	return util.ConstTimeBytesEqual(key.Marshal(), key2.Marshal())
-}
-func (key *eciesPriKey) Equals(key2 IPriKey) bool {
-	return util.ConstTimeBytesEqual(key.Marshal(), key2.Marshal())
-}
-
-func (key *eciesPubKey) Marshal() []byte {
-	return key.pubKey.Bytes(true)
+func (key *eciesPubKey) Raw() ([]byte, error) {
+	return key.pubKey.Bytes(true), nil
 }
 func (key *eciesPubKey) Unmarshal(b []byte) error {
 	pub, err := eciesgo.NewPublicKeyFromBytes(b)
@@ -62,8 +53,8 @@ func (key *eciesPubKey) Unmarshal(b []byte) error {
 	}
 }
 
-func (key *eciesPriKey) Marshal() []byte {
-	return key.priKey.Bytes()
+func (key *eciesPriKey) Raw() ([]byte, error) {
+	return key.priKey.Bytes(), nil
 }
 func (key *eciesPriKey) Unmarshal(b []byte) error {
 	pri := eciesgo.NewPrivateKeyFromBytes(b)

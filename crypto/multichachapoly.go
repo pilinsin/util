@@ -1,6 +1,9 @@
 package crypto
 
 import (
+	pb "github.com/pilinsin/util/crypto/pb"
+	proto "google.golang.org/protobuf/proto"
+
 	"github.com/pilinsin/util"
 )
 
@@ -52,6 +55,7 @@ func (key multiChachaSharedKey) Encrypt(data []byte) ([]byte, error) {
 			err = tmpErr
 		}
 	}
+
 	return data, err
 }
 func (key multiChachaSharedKey) Decrypt(m []byte) ([]byte, error) {
@@ -65,18 +69,26 @@ func (key multiChachaSharedKey) Decrypt(m []byte) ([]byte, error) {
 	return m, err
 }
 
-func (key multiChachaSharedKey) Equals(key2 ISharedKey) bool {
-	return util.ConstTimeBytesEqual(key.Marshal(), key2.Marshal())
+func (key multiChachaSharedKey) Raw() ([]byte, error) {
+	seeds := make([][]byte, len(key.seeds))
+	for idx, seed := range key.seeds{
+		seeds[idx] = seed[:]
+	}
+	mSeeds := &pb.MultiChachaKey{
+		Seeds: seeds,
+	}
+	m, err := proto.Marshal(mSeeds)
+	return m, err
 }
-
-func (key multiChachaSharedKey) Marshal() []byte {
-	m, _ := util.Marshal(key.seeds)
-	return m
-}
-func (key multiChachaSharedKey) Unmarshal(m []byte) error {
-	var seeds [][SharedKeySize]byte
-	if err := util.Unmarshal(m, seeds); err != nil {
+func (key *multiChachaSharedKey) Unmarshal(m []byte) error {
+	mSeeds := &pb.MultiChachaKey{}
+	if err := proto.Unmarshal(m, mSeeds); err != nil {
 		return err
+	}
+
+	seeds := make([][SharedKeySize]byte, len(mSeeds.GetSeeds()))
+	for idx, seed := range mSeeds.GetSeeds(){
+		copy(seeds[idx][:], seed)
 	}
 
 	key.seeds = seeds

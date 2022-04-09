@@ -1,7 +1,9 @@
 package crypto
 
 import (
-	"github.com/pilinsin/util"
+	"errors"
+	pb "github.com/pilinsin/util/crypto/pb"
+	proto "google.golang.org/protobuf/proto"
 )
 
 type sharedEncryptMode int
@@ -34,7 +36,22 @@ func NewSharedEncryptKey(seed []byte) ISharedKey {
 	}
 }
 
+
+func MarshalSharedKey(sk ISharedKey) ([]byte, error){
+	rsk, err := sk.Raw()
+	if err != nil{return nil, err}
+
+	mKey := &pb.Key{
+		Data: rsk,
+	}
+	return proto.Marshal(mKey)
+}
+
 func UnmarshalSharedKey(m []byte) (ISharedKey, error) {
+	mKey := &pb.Key{}
+	if err := proto.Unmarshal(m, mKey); err != nil{return nil, err}
+	m = mKey.GetData()
+	
 	switch SelectedSharedEncMode {
 	case ChaCha:
 		sk := &chachaSharedKey{}
@@ -45,6 +62,6 @@ func UnmarshalSharedKey(m []byte) (ISharedKey, error) {
 		err := sk.Unmarshal(m)
 		return sk, err
 	default:
-		return nil, util.NewError("invalid SharedEncryptMode is selected")
+		return nil, errors.New("invalid SharedEncryptMode is selected")
 	}
 }

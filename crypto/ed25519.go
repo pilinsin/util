@@ -51,22 +51,15 @@ func (key *ed25519VerfKey) Verify(msg, sig []byte) (bool, error) {
 	return ced.Verify(key.verfKey, msg, sig), nil
 }
 
-func (key *ed25519SignKey) Equals(key2 ISignKey) bool {
-	return util.ConstTimeBytesEqual(key.Marshal(), key2.Marshal())
-}
-func (key *ed25519VerfKey) Equals(key2 IVerfKey) bool {
-	return util.ConstTimeBytesEqual(key.Marshal(), key2.Marshal())
-}
-
-func (key *ed25519SignKey) Marshal() []byte {
-	return key.signKey
+func (key *ed25519SignKey) Raw() ([]byte, error) {
+	return key.signKey, nil
 }
 func (key *ed25519SignKey) Unmarshal(b []byte) error {
 	key.signKey = b
 	return nil
 }
-func (key *ed25519VerfKey) Marshal() []byte {
-	return key.verfKey
+func (key *ed25519VerfKey) Raw() ([]byte, error) {
+	return key.verfKey, nil
 }
 func (key *ed25519VerfKey) Unmarshal(b []byte) error {
 	key.verfKey = b

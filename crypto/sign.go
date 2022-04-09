@@ -1,7 +1,9 @@
 package crypto
 
 import (
-	"github.com/pilinsin/util"
+	"errors"
+	pb "github.com/pilinsin/util/crypto/pb"
+	proto "google.golang.org/protobuf/proto"
 )
 
 type signMode int
@@ -30,7 +32,21 @@ func NewSignKeyPair() ISignKeyPair {
 	}
 }
 
+func MarshalSignKey(sk ISignKey) ([]byte, error){
+	rsk, err := sk.Raw()
+	if err != nil{return nil, err}
+
+	mKey := &pb.Key{
+		Data: rsk,
+	}
+	return proto.Marshal(mKey)
+}
+
 func UnmarshalSignKey(m []byte) (ISignKey, error) {
+	mKey := &pb.Key{}
+	if err := proto.Unmarshal(m, mKey); err != nil{return nil, err}
+	m = mKey.GetData()
+
 	switch SelectedSignMode {
 	case Sphincs, Falcon:
 		sk := &oqsSignKey{}
@@ -45,11 +61,25 @@ func UnmarshalSignKey(m []byte) (ISignKey, error) {
 		err := sk.Unmarshal(m)
 		return sk, err
 	default:
-		return nil, util.NewError("invalid SignMode is selected")
+		return nil, errors.New("invalid SignMode is selected")
 	}
 }
 
+func MarshalVerfKey(vk IVerfKey) ([]byte, error){
+	rvk, err := vk.Raw()
+	if err != nil{return nil, err}
+
+	mKey := &pb.Key{
+		Data: rvk,
+	}
+	return proto.Marshal(mKey)
+}
+
 func UnmarshalVerfKey(m []byte) (IVerfKey, error) {
+	mKey := &pb.Key{}
+	if err := proto.Unmarshal(m, mKey); err != nil{return nil, err}
+	m = mKey.GetData()
+
 	switch SelectedSignMode {
 	case Sphincs, Falcon:
 		vk := &oqsVerfKey{}
@@ -64,6 +94,6 @@ func UnmarshalVerfKey(m []byte) (IVerfKey, error) {
 		err := vk.Unmarshal(m)
 		return vk, err
 	default:
-		return nil, util.NewError("invalid SignMode is selected")
+		return nil, errors.New("invalid SignMode is selected")
 	}
 }

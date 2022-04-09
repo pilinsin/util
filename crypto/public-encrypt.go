@@ -1,7 +1,9 @@
 package crypto
 
 import (
-	"github.com/pilinsin/util"
+	"errors"
+	pb "github.com/pilinsin/util/crypto/pb"
+	proto "google.golang.org/protobuf/proto"
 )
 
 type pubEncryptMode int
@@ -30,7 +32,22 @@ func NewPubEncryptKeyPair() IPubEncryptKeyPair {
 	}
 }
 
+
+func MarshalPriKey(pk IPriKey) ([]byte, error){
+	rpk, err := pk.Raw()
+	if err != nil{return nil, err}
+
+	mKey := &pb.Key{
+		Data: rpk,
+	}
+	return proto.Marshal(mKey)
+}
+
 func UnmarshalPriKey(m []byte) (IPriKey, error) {
+	mKey := &pb.Key{}
+	if err := proto.Unmarshal(m, mKey); err != nil{return nil, err}
+	m = mKey.GetData()
+
 	switch SelectedPubEncMode {
 	case Sidh, Ntru:
 		pri := &oqsPriKey{}
@@ -45,11 +62,26 @@ func UnmarshalPriKey(m []byte) (IPriKey, error) {
 		err := pri.Unmarshal(m)
 		return pri, err
 	default:
-		return nil, util.NewError("invalid PubEncryptMode is selected")
+		return nil, errors.New("invalid PubEncryptMode is selected")
 	}
 }
 
+
+func MarshalPubKey(pk IPubKey) ([]byte, error){
+	rpk, err := pk.Raw()
+	if err != nil{return nil, err}
+
+	mKey := &pb.Key{
+		Data: rpk,
+	}
+	return proto.Marshal(mKey)
+}
+
 func UnmarshalPubKey(m []byte) (IPubKey, error) {
+	mKey := &pb.Key{}
+	if err := proto.Unmarshal(m, mKey); err != nil{return nil, err}
+	m = mKey.GetData()
+	
 	switch SelectedPubEncMode {
 	case Sidh, Ntru:
 		pub := &oqsPubKey{}
@@ -64,6 +96,6 @@ func UnmarshalPubKey(m []byte) (IPubKey, error) {
 		err := pub.Unmarshal(m)
 		return pub, err
 	default:
-		return nil, util.NewError("invalid PubEncryptMode is selected")
+		return nil, errors.New("invalid PubEncryptMode is selected")
 	}
 }

@@ -1,12 +1,10 @@
 package crypto
 
 import (
+	"errors"
 	"crypto/rand"
 
 	sntrup "github.com/companyzero/sntrup4591761"
-	chacha "golang.org/x/crypto/chacha20poly1305"
-
-	"github.com/pilinsin/util"
 )
 
 const (
@@ -40,48 +38,30 @@ type sntrupPriKey struct {
 
 func (pri *sntrupPriKey) Decrypt(m []byte) ([]byte, error) {
 	if len(m) <= cipherSize {
-		return nil, util.NewError("decrypt fail: len(m) <= cipherSize")
+		return nil, errors.New("decrypt fail: len(m) <= cipherSize")
 	}
 	cipher := new([cipherSize]byte)
 	copy(cipher[:], m[:cipherSize])
 
 	share, flag := sntrup.Decapsulate(cipher, pri.priKey)
 	if flag <= 0 {
-		return nil, util.NewError("decrypt fail: decapsulate error")
+		return nil, errors.New("decrypt fail: decapsulate error")
 	}
-	aead, err := chacha.New(share[:])
-	if err != nil {
-		return nil, err
-	}
-	if len(m) <= cipherSize+aead.NonceSize()+aead.Overhead() {
-		return nil, util.NewError("decrypt fail: len(m) <= cipherSize+nonceSize+overHead")
-	}
-	encTotal := m[cipherSize:]
-	nonce, enc := encTotal[:aead.NonceSize()], encTotal[aead.NonceSize():]
-	if data, err := aead.Open(nil, nonce, enc, nil); err != nil {
-		return nil, err
-	} else {
-		return data, nil
-	}
+
+	return newChaChaSharedKey(*share).Decrypt(m[cipherSize:])
 }
-func (pri *sntrupPriKey) Public() IPubKey {
-	pub := new([pubKeySize]byte)
-	copy(pub[:], pri.priKey[382:])
-	return &sntrupPubKey{pub}
-}
-func (pri *sntrupPriKey) Equals(pri2 IPriKey) bool {
-	return util.ConstTimeBytesEqual(pri.Marshal(), pri2.Marshal())
-}
-func (pri *sntrupPriKey) Marshal() []byte {
-	m, _ := util.Marshal(pri.priKey)
-	return m
+
+func (pri *sntrupPriKey) Raw() ([]byte, error) {
+	return (*pri.priKey)[:], nil
 }
 func (pri *sntrupPriKey) Unmarshal(m []byte) error {
-	priKey := new([priKeySize]byte)
-	if err := util.Unmarshal(m, priKey); err != nil {
-		return err
+	if len(m) != priKeySize{
+		return errors.New("invalid input")
 	}
-	pri.priKey = priKey
+	
+	priKey := [priKeySize]byte{}
+	copy(priKey[:], m)
+	pri.priKey = &priKey
 	return nil
 }
 
@@ -94,30 +74,20 @@ func (pub *sntrupPubKey) Encrypt(data []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	aead, err := chacha.NewX(share[:])
-	if err != nil {
-		return nil, err
-	}
-	nonce := make([]byte, aead.NonceSize(), aead.NonceSize()+len(data)+aead.Overhead())
-	if _, err := rand.Read(nonce); err != nil {
-		return nil, err
-	}
-	enc := aead.Seal(nonce, nonce, data, nil)
+	enc, err := newChaChaSharedKey(*share).Encrypt(data)
+	if err != nil{return nil, err}
 	return append(cipher[:], enc...), nil
 }
-func (pub *sntrupPubKey) Equals(pub2 IPubKey) bool {
-	return util.ConstTimeBytesEqual(pub.Marshal(), pub2.Marshal())
-}
-func (pub *sntrupPubKey) Marshal() []byte {
-	m, _ := util.Marshal(pub.pubKey)
-	return m
+
+func (pub *sntrupPubKey) Raw() ([]byte, error) {
+	return (*pub.pubKey)[:], nil
 }
 func (pub *sntrupPubKey) Unmarshal(m []byte) error {
-	pubKey := new([pubKeySize]byte)
-	if err := util.Unmarshal(m, pubKey); err != nil {
-		return err
+	if len(m) != pubKeySize{
+		return errors.New("invalid input")
 	}
-	pub.pubKey = pubKey
+	pubKey := [pubKeySize]byte{}
+	copy(pubKey[:], m)
+	pub.pubKey = &pubKey
 	return nil
 }

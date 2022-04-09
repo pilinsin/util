@@ -27,8 +27,8 @@ cd $(ANYPATH2) && git clone https://github.com/open-quantum-safe/liboqs-go
 
 Edit $(ANYPATH2)/liboqs-go/.config/liboqs.pc:
 ```bash
-LIBOQS_INCLUDE_DIR=$(ANYPATH)/liboqs/build/include
-LIBOQS_LIB_DIR=$(ANYPATH)/liboqs/build/lib
+LIBOQS_INCLUDE_DIR=/usr/local/include
+LIBOQS_LIB_DIR=/usr/local/lib
 ```
 ```bash
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$(ANYPATH2)/liboqs-go/.config

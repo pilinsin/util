@@ -48,14 +48,10 @@ func (key aesSharedKey) Decrypt(m []byte) ([]byte, error) {
 	}
 }
 
-func (key aesSharedKey) Equals(key2 ISharedKey) bool {
-	return util.ConstTimeBytesEqual(key.Marshal(), key2.Marshal())
+func (key aesSharedKey) Raw() ([]byte, error) {
+	return key.seed, nil
 }
-
-func (key aesSharedKey) Marshal() []byte {
-	return key.seed
-}
-func (key aesSharedKey) Unmarshal(m []byte) error {
+func (key *aesSharedKey) Unmarshal(m []byte) error {
 	if len(m) != SharedKeySize {
 		return util.NewError("invalid input")
 	}

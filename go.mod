@@ -10,4 +10,5 @@ require (
 	github.com/open-quantum-safe/liboqs-go v0.0.0-20220105163900-e0f759d70fa5 // indirect
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 )

@@ -44,14 +44,10 @@ func (key chachaSharedKey) Decrypt(m []byte) ([]byte, error) {
 	}
 }
 
-func (key chachaSharedKey) Equals(key2 ISharedKey) bool {
-	return util.ConstTimeBytesEqual(key.Marshal(), key2.Marshal())
+func (key chachaSharedKey) Raw() ([]byte, error) {
+	return key.seed, nil
 }
-
-func (key chachaSharedKey) Marshal() []byte {
-	return key.seed
-}
-func (key chachaSharedKey) Unmarshal(m []byte) error {
+func (key *chachaSharedKey) Unmarshal(m []byte) error {
 	if len(m) != SharedKeySize {
 		return util.NewError("invalid input")
 	}

@@ -1,6 +1,9 @@
 package crypto
 
 import (
+	pb "github.com/pilinsin/util/crypto/pb"
+	proto "google.golang.org/protobuf/proto"
+
 	"github.com/LoCCS/bliss"
 	"github.com/LoCCS/bliss/sampler"
 	"github.com/pilinsin/util"
@@ -50,34 +53,26 @@ func (sk *blissSignKey) Verify() IVerfKey {
 	verfKey := sk.signKey.PublicKey()
 	return &blissVerfKey{verfKey}
 }
-func (sk *blissSignKey) Equals(sk2 ISignKey) bool {
-	m := sk.Marshal()
-	m2 := sk2.Marshal()
-	return util.ConstTimeBytesEqual(m, m2)
-}
-func (sk *blissSignKey) Marshal() []byte {
-	marshalSignKey := &struct {
-		Sign []byte
-		Seed []uint8
-	}{sk.signKey.Encode(), sk.seed}
-	m, _ := util.Marshal(marshalSignKey)
-	return m
+func (sk *blissSignKey) Raw() ([]byte, error) {
+	marshalSignKey := &pb.BlissSignKey{
+		Data: sk.signKey.Encode(),
+		Seed: sk.seed,
+	}
+	m, err := proto.Marshal(marshalSignKey)
+	return m, err
 }
 func (sk *blissSignKey) Unmarshal(m []byte) error {
-	marshalSignKey := &struct {
-		Sign []byte
-		Seed []uint8
-	}{}
-	if err := util.Unmarshal(m, marshalSignKey); err != nil {
+	marshalSignKey := &pb.BlissSignKey{}
+	if err := proto.Unmarshal(m, marshalSignKey); err != nil {
 		return err
 	}
-	signKey, err := bliss.DecodePrivateKey(marshalSignKey.Sign)
+	signKey, err := bliss.DecodePrivateKey(marshalSignKey.GetData())
 	if err != nil {
 		return err
 	}
 
 	sk.signKey = signKey
-	sk.seed = marshalSignKey.Seed
+	sk.seed = marshalSignKey.GetSeed()
 	return nil
 }
 
@@ -93,13 +88,8 @@ func (vk *blissVerfKey) Verify(data, sign []byte) (bool, error) {
 		return ok, err
 	}
 }
-func (vk *blissVerfKey) Equals(vk2 IVerfKey) bool {
-	m := vk.Marshal()
-	m2 := vk2.Marshal()
-	return util.ConstTimeBytesEqual(m, m2)
-}
-func (vk *blissVerfKey) Marshal() []byte {
-	return vk.verfKey.Encode()
+func (vk *blissVerfKey) Raw() ([]byte, error) {
+	return vk.verfKey.Encode(), nil
 }
 func (vk *blissVerfKey) Unmarshal(m []byte) error {
 	if verfKey, err := bliss.DecodePublicKey(m); err != nil {
