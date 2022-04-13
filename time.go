@@ -14,16 +14,27 @@ type TimeInfo struct {
 }
 
 func NewTimeInfo(begin, end, loc string) (*TimeInfo, bool) {
-	if _, err := time.Parse(Layout, begin); err != nil {
-		return nil, false
-	}
-	if _, err := time.Parse(Layout, end); err != nil {
-		return nil, false
-	}
-	if _, err := time.LoadLocation(loc); err != nil {
-		return nil, false
-	}
-	return &TimeInfo{begin, end, loc}, true
+	L, err := time.LoadLocation(loc)
+	if err != nil{return nil, err}
+	bTime, err := time.ParseInLocation(Layout, begin, L)
+	if err != nil{return nil, err}
+	eTime, err := time.ParseInLocation(Layout, end, L)
+	if err != nil{return nil, err}
+	return &TimeInfo{begin.String(), end.String(), L.String()}, nil
+}
+func (ti TimeInfo) BeginTime() time.Time{
+	L, err := time.LoadLocation(ti.Loc)
+	if err != nil{return time.Time{}}
+	bTime, err := time.ParseInLocation(Layout, ti.Begin, L)
+	if err != nil{return time.Time{}}
+	return bTime
+}
+func (ti TimeInfo) EndTime() time.Time{
+	L, err := time.LoadLocation(ti.Loc)
+	if err != nil{return time.Time{}}
+	eTime, err := time.ParseInLocation(Layout, ti.End, L)
+	if err != nil{return time.Time{}}
+	return eTime
 }
 func (ti TimeInfo) WithinTime(now time.Time) bool {
 	L, _ := time.LoadLocation(ti.Loc)
