@@ -13,14 +13,14 @@ type TimeInfo struct {
 	Begin, End, Loc string
 }
 
-func NewTimeInfo(begin, end, loc string) (*TimeInfo, bool) {
+func NewTimeInfo(begin, end, loc string) (*TimeInfo, error) {
 	L, err := time.LoadLocation(loc)
 	if err != nil{return nil, err}
 	bTime, err := time.ParseInLocation(Layout, begin, L)
 	if err != nil{return nil, err}
 	eTime, err := time.ParseInLocation(Layout, end, L)
 	if err != nil{return nil, err}
-	return &TimeInfo{begin.String(), end.String(), L.String()}, nil
+	return &TimeInfo{bTime.String(), eTime.String(), L.String()}, nil
 }
 func (ti TimeInfo) BeginTime() time.Time{
 	L, err := time.LoadLocation(ti.Loc)
