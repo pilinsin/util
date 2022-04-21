@@ -20,7 +20,7 @@ func NewTimeInfo(begin, end, loc string) (*TimeInfo, error) {
 	if err != nil{return nil, err}
 	eTime, err := time.ParseInLocation(Layout, end, L)
 	if err != nil{return nil, err}
-	return &TimeInfo{bTime.String(), eTime.String(), L.String()}, nil
+	return &TimeInfo{begin, end, loc}, nil
 }
 func (ti TimeInfo) BeginTime() time.Time{
 	L, err := time.LoadLocation(ti.Loc)
