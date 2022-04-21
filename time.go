@@ -16,10 +16,8 @@ type TimeInfo struct {
 func NewTimeInfo(begin, end, loc string) (*TimeInfo, error) {
 	L, err := time.LoadLocation(loc)
 	if err != nil{return nil, err}
-	bTime, err := time.ParseInLocation(Layout, begin, L)
-	if err != nil{return nil, err}
-	eTime, err := time.ParseInLocation(Layout, end, L)
-	if err != nil{return nil, err}
+	if _, err := time.ParseInLocation(Layout, begin, L); err != nil{return nil, err}
+	if _, err := time.ParseInLocation(Layout, end, L); err != nil{return nil, err}
 	return &TimeInfo{begin, end, loc}, nil
 }
 func (ti TimeInfo) BeginTime() time.Time{
