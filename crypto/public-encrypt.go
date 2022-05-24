@@ -23,10 +23,12 @@ func NewPubEncryptKeyPair() IPubEncryptKeyPair {
 		return newOqsEncryptKeyPair("SIDH-p751-compressed")
 	case Ntru:
 		return newOqsEncryptKeyPair("NTRU-HPS-4096-821")
+/*
 	case Sntrup:
 		return newSntrupKeyPair()
 	case Ecies:
 		return newEciesKeyPair()
+*/
 	default:
 		return nil
 	}
@@ -53,6 +55,7 @@ func UnmarshalPriKey(m []byte) (IPriKey, error) {
 		pri := &oqsPriKey{}
 		err := pri.Unmarshal(m)
 		return pri, err
+/*
 	case Sntrup:
 		pri := &sntrupPriKey{}
 		err := pri.Unmarshal(m)
@@ -61,6 +64,7 @@ func UnmarshalPriKey(m []byte) (IPriKey, error) {
 		pri := &eciesPriKey{}
 		err := pri.Unmarshal(m)
 		return pri, err
+*/
 	default:
 		return nil, errors.New("invalid PubEncryptMode is selected")
 	}
@@ -87,6 +91,7 @@ func UnmarshalPubKey(m []byte) (IPubKey, error) {
 		pub := &oqsPubKey{}
 		err := pub.Unmarshal(m)
 		return pub, err
+/*
 	case Sntrup:
 		pub := &sntrupPubKey{}
 		err := pub.Unmarshal(m)
@@ -95,6 +100,7 @@ func UnmarshalPubKey(m []byte) (IPubKey, error) {
 		pub := &eciesPubKey{}
 		err := pub.Unmarshal(m)
 		return pub, err
+*/
 	default:
 		return nil, errors.New("invalid PubEncryptMode is selected")
 	}

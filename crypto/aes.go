@@ -1,5 +1,5 @@
 package crypto
-
+/*
 import (
 	"crypto/aes"
 	"crypto/cipher"
@@ -58,3 +58,4 @@ func (key *aesSharedKey) Unmarshal(m []byte) error {
 	key.seed = m
 	return nil
 }
+*/

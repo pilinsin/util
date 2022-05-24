@@ -29,8 +29,10 @@ func NewSharedEncryptKey(seed []byte) ISharedKey {
 	switch SelectedSharedEncMode {
 	case ChaCha:
 		return newChaChaSharedKey(key)
+/*	
 	case AES:
 		return newAESSharedKey(key)
+*/
 	default:
 		return nil
 	}
@@ -57,10 +59,12 @@ func UnmarshalSharedKey(m []byte) (ISharedKey, error) {
 		sk := &chachaSharedKey{}
 		err := sk.Unmarshal(m)
 		return sk, err
+/*
 	case AES:
 		sk := &aesSharedKey{}
 		err := sk.Unmarshal(m)
 		return sk, err
+*/
 	default:
 		return nil, errors.New("invalid SharedEncryptMode is selected")
 	}

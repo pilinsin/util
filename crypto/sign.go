@@ -23,10 +23,12 @@ func NewSignKeyPair() ISignKeyPair {
 		return newOqsSignKeyPair("SPHINCS+-SHAKE256-256s-robust")
 	case Falcon:
 		return newOqsSignKeyPair("Falcon-1024")
+/*
 	case Bliss:
 		return newBlissKeyPair()
 	case Ed25519:
 		return newEd25519KeyPair()
+*/
 	default:
 		return nil
 	}
@@ -52,6 +54,7 @@ func UnmarshalSignKey(m []byte) (ISignKey, error) {
 		sk := &oqsSignKey{}
 		err := sk.Unmarshal(m)
 		return sk, err
+/*
 	case Bliss:
 		sk := &blissSignKey{}
 		err := sk.Unmarshal(m)
@@ -60,6 +63,7 @@ func UnmarshalSignKey(m []byte) (ISignKey, error) {
 		sk := &ed25519SignKey{}
 		err := sk.Unmarshal(m)
 		return sk, err
+*/
 	default:
 		return nil, errors.New("invalid SignMode is selected")
 	}
@@ -85,6 +89,7 @@ func UnmarshalVerfKey(m []byte) (IVerfKey, error) {
 		vk := &oqsVerfKey{}
 		err := vk.Unmarshal(m)
 		return vk, err
+/*
 	case Bliss:
 		vk := &blissVerfKey{}
 		err := vk.Unmarshal(m)
@@ -93,6 +98,7 @@ func UnmarshalVerfKey(m []byte) (IVerfKey, error) {
 		vk := &ed25519VerfKey{}
 		err := vk.Unmarshal(m)
 		return vk, err
+*/
 	default:
 		return nil, errors.New("invalid SignMode is selected")
 	}

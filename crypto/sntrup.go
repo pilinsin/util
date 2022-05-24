@@ -1,5 +1,5 @@
 package crypto
-
+/*
 import (
 	"errors"
 	"crypto/rand"
@@ -91,3 +91,4 @@ func (pub *sntrupPubKey) Unmarshal(m []byte) error {
 	pub.pubKey = &pubKey
 	return nil
 }
+*/

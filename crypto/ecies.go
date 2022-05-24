@@ -1,5 +1,5 @@
 package crypto
-
+/*
 import (
 	eciesgo "github.com/ecies/go"
 )
@@ -61,3 +61,4 @@ func (key *eciesPriKey) Unmarshal(b []byte) error {
 	key.priKey = pri
 	return nil
 }
+*/

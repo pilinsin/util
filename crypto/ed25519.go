@@ -1,5 +1,5 @@
 package crypto
-
+/*
 import (
 	sed "crypto/ed25519"
 	ced "golang.org/x/crypto/ed25519"
@@ -65,3 +65,4 @@ func (key *ed25519VerfKey) Unmarshal(b []byte) error {
 	key.verfKey = b
 	return nil
 }
+*/

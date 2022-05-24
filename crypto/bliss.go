@@ -1,5 +1,5 @@
 package crypto
-
+/*
 import (
 	pb "github.com/pilinsin/util/crypto/pb"
 	proto "google.golang.org/protobuf/proto"
@@ -99,3 +99,4 @@ func (vk *blissVerfKey) Unmarshal(m []byte) error {
 		return nil
 	}
 }
+*/
