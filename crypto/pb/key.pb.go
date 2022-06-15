@@ -67,61 +67,6 @@ func (x *Key) GetData() []byte {
 	return nil
 }
 
-type BlissSignKey struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Data []byte `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	Seed []byte `protobuf:"bytes,2,opt,name=seed,proto3" json:"seed,omitempty"`
-}
-
-func (x *BlissSignKey) Reset() {
-	*x = BlissSignKey{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_key_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *BlissSignKey) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BlissSignKey) ProtoMessage() {}
-
-func (x *BlissSignKey) ProtoReflect() protoreflect.Message {
-	mi := &file_key_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BlissSignKey.ProtoReflect.Descriptor instead.
-func (*BlissSignKey) Descriptor() ([]byte, []int) {
-	return file_key_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *BlissSignKey) GetData() []byte {
-	if x != nil {
-		return x.Data
-	}
-	return nil
-}
-
-func (x *BlissSignKey) GetSeed() []byte {
-	if x != nil {
-		return x.Seed
-	}
-	return nil
-}
-
 type MultiChachaKey struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -133,7 +78,7 @@ type MultiChachaKey struct {
 func (x *MultiChachaKey) Reset() {
 	*x = MultiChachaKey{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_key_proto_msgTypes[2]
+		mi := &file_key_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -146,7 +91,7 @@ func (x *MultiChachaKey) String() string {
 func (*MultiChachaKey) ProtoMessage() {}
 
 func (x *MultiChachaKey) ProtoReflect() protoreflect.Message {
-	mi := &file_key_proto_msgTypes[2]
+	mi := &file_key_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -159,7 +104,7 @@ func (x *MultiChachaKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiChachaKey.ProtoReflect.Descriptor instead.
 func (*MultiChachaKey) Descriptor() ([]byte, []int) {
-	return file_key_proto_rawDescGZIP(), []int{2}
+	return file_key_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *MultiChachaKey) GetSeeds() [][]byte {
@@ -182,7 +127,7 @@ type OqsPriKey struct {
 func (x *OqsPriKey) Reset() {
 	*x = OqsPriKey{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_key_proto_msgTypes[3]
+		mi := &file_key_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -195,7 +140,7 @@ func (x *OqsPriKey) String() string {
 func (*OqsPriKey) ProtoMessage() {}
 
 func (x *OqsPriKey) ProtoReflect() protoreflect.Message {
-	mi := &file_key_proto_msgTypes[3]
+	mi := &file_key_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -208,7 +153,7 @@ func (x *OqsPriKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OqsPriKey.ProtoReflect.Descriptor instead.
 func (*OqsPriKey) Descriptor() ([]byte, []int) {
-	return file_key_proto_rawDescGZIP(), []int{3}
+	return file_key_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *OqsPriKey) GetData() []byte {
@@ -244,7 +189,7 @@ type OqsKey struct {
 func (x *OqsKey) Reset() {
 	*x = OqsKey{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_key_proto_msgTypes[4]
+		mi := &file_key_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -257,7 +202,7 @@ func (x *OqsKey) String() string {
 func (*OqsKey) ProtoMessage() {}
 
 func (x *OqsKey) ProtoReflect() protoreflect.Message {
-	mi := &file_key_proto_msgTypes[4]
+	mi := &file_key_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -270,7 +215,7 @@ func (x *OqsKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OqsKey.ProtoReflect.Descriptor instead.
 func (*OqsKey) Descriptor() ([]byte, []int) {
-	return file_key_proto_rawDescGZIP(), []int{4}
+	return file_key_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *OqsKey) GetData() []byte {
@@ -292,22 +237,18 @@ var File_key_proto protoreflect.FileDescriptor
 var file_key_proto_rawDesc = []byte{
 	0x0a, 0x09, 0x6b, 0x65, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02, 0x70, 0x62, 0x22,
 	0x19, 0x0a, 0x03, 0x4b, 0x65, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x36, 0x0a, 0x0c, 0x42, 0x6c,
-	0x69, 0x73, 0x73, 0x53, 0x69, 0x67, 0x6e, 0x4b, 0x65, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61,
-	0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x12,
-	0x0a, 0x04, 0x73, 0x65, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x73, 0x65,
-	0x65, 0x64, 0x22, 0x26, 0x0a, 0x0e, 0x4d, 0x75, 0x6c, 0x74, 0x69, 0x43, 0x68, 0x61, 0x63, 0x68,
-	0x61, 0x4b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x65, 0x65, 0x64, 0x73, 0x18, 0x01, 0x20,
-	0x03, 0x28, 0x0c, 0x52, 0x05, 0x73, 0x65, 0x65, 0x64, 0x73, 0x22, 0x47, 0x0a, 0x09, 0x4f, 0x71,
-	0x73, 0x50, 0x72, 0x69, 0x4b, 0x65, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x6d,
-	0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6d, 0x6f, 0x64, 0x65, 0x12,
-	0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x73,
-	0x69, 0x7a, 0x65, 0x22, 0x30, 0x0a, 0x06, 0x4f, 0x71, 0x73, 0x4b, 0x65, 0x79, 0x12, 0x12, 0x0a,
-	0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74,
-	0x61, 0x12, 0x12, 0x0a, 0x04, 0x6d, 0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x04, 0x6d, 0x6f, 0x64, 0x65, 0x42, 0x04, 0x5a, 0x02, 0x2e, 0x2f, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x26, 0x0a, 0x0e, 0x4d, 0x75,
+	0x6c, 0x74, 0x69, 0x43, 0x68, 0x61, 0x63, 0x68, 0x61, 0x4b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05,
+	0x73, 0x65, 0x65, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x05, 0x73, 0x65, 0x65,
+	0x64, 0x73, 0x22, 0x47, 0x0a, 0x09, 0x4f, 0x71, 0x73, 0x50, 0x72, 0x69, 0x4b, 0x65, 0x79, 0x12,
+	0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64,
+	0x61, 0x74, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x6d, 0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x6d, 0x6f, 0x64, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x22, 0x30, 0x0a, 0x06, 0x4f,
+	0x71, 0x73, 0x4b, 0x65, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x6d, 0x6f, 0x64,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6d, 0x6f, 0x64, 0x65, 0x42, 0x04, 0x5a,
+	0x02, 0x2e, 0x2f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -322,13 +263,12 @@ func file_key_proto_rawDescGZIP() []byte {
 	return file_key_proto_rawDescData
 }
 
-var file_key_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_key_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_key_proto_goTypes = []interface{}{
 	(*Key)(nil),            // 0: pb.Key
-	(*BlissSignKey)(nil),   // 1: pb.BlissSignKey
-	(*MultiChachaKey)(nil), // 2: pb.MultiChachaKey
-	(*OqsPriKey)(nil),      // 3: pb.OqsPriKey
-	(*OqsKey)(nil),         // 4: pb.OqsKey
+	(*MultiChachaKey)(nil), // 1: pb.MultiChachaKey
+	(*OqsPriKey)(nil),      // 2: pb.OqsPriKey
+	(*OqsKey)(nil),         // 3: pb.OqsKey
 }
 var file_key_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -357,18 +297,6 @@ func file_key_proto_init() {
 			}
 		}
 		file_key_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BlissSignKey); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_key_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MultiChachaKey); i {
 			case 0:
 				return &v.state
@@ -380,7 +308,7 @@ func file_key_proto_init() {
 				return nil
 			}
 		}
-		file_key_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_key_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*OqsPriKey); i {
 			case 0:
 				return &v.state
@@ -392,7 +320,7 @@ func file_key_proto_init() {
 				return nil
 			}
 		}
-		file_key_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_key_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*OqsKey); i {
 			case 0:
 				return &v.state
@@ -411,7 +339,7 @@ func file_key_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_key_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

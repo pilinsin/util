@@ -6,11 +6,6 @@ message Key{
 	bytes data = 1;
 }
 
-message BlissSignKey{
-	bytes data = 1;
-	bytes seed = 2;
-}
-
 message MultiChachaKey{
 	repeated bytes seeds = 1;
 }
