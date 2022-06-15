@@ -1,7 +1,7 @@
 package ecies
 
 import (
-	eciesgo "github.com/ecies/go"
+	eciesgo "github.com/ecies/go/v2"
 	ipub "github.com/pilinsin/util/crypto/public"
 )
 
