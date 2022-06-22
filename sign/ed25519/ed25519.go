@@ -2,11 +2,11 @@ package ed25519
 
 import (
 	"errors"
+
 	ed "golang.org/x/crypto/ed25519"
 
-	isign "github.com/pilinsin/util/crypto/sign"
+	isign "github.com/pilinsin/util/sign"
 )
-
 
 type ed25519KeyPair struct {
 	signKey *ed25519SignKey
@@ -25,10 +25,10 @@ func (kp *ed25519KeyPair) Verify() isign.IVerfKey {
 	return kp.verfKey
 }
 
-
 type ed25519SignKey struct {
 	signKey ed.PrivateKey
 }
+
 func (key *ed25519SignKey) Sign(msg []byte) ([]byte, error) {
 	if len(key.signKey) != ed.PrivateKeySize {
 		return nil, errors.New("invalid signKey")
@@ -42,16 +42,16 @@ func (key *ed25519SignKey) Unmarshal(b []byte) error {
 	key.signKey = b
 	return nil
 }
-func UnmarshalSignKey(m []byte) (isign.ISignKey, error){
+func UnmarshalSignKey(m []byte) (isign.ISignKey, error) {
 	sk := &ed25519SignKey{}
 	err := sk.Unmarshal(m)
 	return sk, err
 }
 
-
 type ed25519VerfKey struct {
 	verfKey ed.PublicKey
 }
+
 func (key *ed25519VerfKey) Verify(msg, sig []byte) (bool, error) {
 	if len(key.verfKey) != ed.PublicKeySize {
 		return false, errors.New("invalid verfKey")
@@ -65,7 +65,7 @@ func (key *ed25519VerfKey) Unmarshal(b []byte) error {
 	key.verfKey = b
 	return nil
 }
-func UnmarshalVerfKey(m []byte) (isign.IVerfKey, error){
+func UnmarshalVerfKey(m []byte) (isign.IVerfKey, error) {
 	sk := &ed25519VerfKey{}
 	err := sk.Unmarshal(m)
 	return sk, err

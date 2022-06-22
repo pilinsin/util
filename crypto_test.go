@@ -1,29 +1,29 @@
-package crypto
+package util
 
-import(
-	"testing"
+import (
 	"crypto/rand"
+	"testing"
 
-	isec "github.com/pilinsin/util/crypto/secret"
-	aes "github.com/pilinsin/util/crypto/secret/aes"
-	chacha "github.com/pilinsin/util/crypto/secret/chacha"
-	mchacha "github.com/pilinsin/util/crypto/secret/multichacha"
+	isec "github.com/pilinsin/util/secret"
+	aes "github.com/pilinsin/util/secret/aes"
+	chacha "github.com/pilinsin/util/secret/chacha"
+	mchacha "github.com/pilinsin/util/secret/multichacha"
 
-	iexch "github.com/pilinsin/util/crypto/exchange"
-	sidh "github.com/pilinsin/util/crypto/exchange/sidh"
-	ntru "github.com/pilinsin/util/crypto/exchange/ntru"
+	//ntru "github.com/pilinsin/util/exchange/ntru"
+	//sidh "github.com/pilinsin/util/exchange/sidh"
 
-	ipub "github.com/pilinsin/util/crypto/public"
-	ecies "github.com/pilinsin/util/crypto/public/ecies"
-	psidh "github.com/pilinsin/util/crypto/public/sidh"
-	pntru "github.com/pilinsin/util/crypto/public/ntru"
+	ipub "github.com/pilinsin/util/public"
+	ecies "github.com/pilinsin/util/public/ecies"
 
-	isign "github.com/pilinsin/util/crypto/sign"
-	ed25519 "github.com/pilinsin/util/crypto/sign/ed25519"
-	sphincs "github.com/pilinsin/util/crypto/sign/sphincs"
-	falcon "github.com/pilinsin/util/crypto/sign/falcon"
+	//pntru "github.com/pilinsin/util/public/ntru"
+	//psidh "github.com/pilinsin/util/public/sidh"
 
+	isign "github.com/pilinsin/util/sign"
+	ed25519 "github.com/pilinsin/util/sign/ed25519"
+	//falcon "github.com/pilinsin/util/sign/falcon"
+	//sphincs "github.com/pilinsin/util/sign/sphincs"
 )
+
 func checkError(t *testing.T, err error, args ...interface{}) {
 	if err != nil {
 		args0 := make([]interface{}, len(args)+1)
@@ -33,14 +33,13 @@ func checkError(t *testing.T, err error, args ...interface{}) {
 		t.Fatal(args0...)
 	}
 }
-func assertError(t *testing.T, cond bool, args ...interface{}){
-	if !cond{
+func assertError(t *testing.T, cond bool, args ...interface{}) {
+	if !cond {
 		t.Fatal(args...)
 	}
 }
 
-
-func secretEncDecTest(t *testing.T, sh isec.ISecretKey) bool{
+func secretEncDecTest(t *testing.T, sh isec.ISecretKey) bool {
 	data := []byte("meow meow ^_^")
 	enc, err := sh.Encrypt(data)
 	checkError(t, err)
@@ -48,9 +47,11 @@ func secretEncDecTest(t *testing.T, sh isec.ISecretKey) bool{
 	checkError(t, err)
 	return string(data) == string(dec)
 }
+
 type secretKeyGenerator func([]byte) isec.ISecretKey
 type secretUnmarshaller func([]byte) (isec.ISecretKey, error)
-func secretTest(t *testing.T, kGen secretKeyGenerator, sUm secretUnmarshaller){
+
+func secretTest(t *testing.T, kGen secretKeyGenerator, sUm secretUnmarshaller) {
 	seed := make([]byte, isec.SecretKeySize)
 	rand.Read(seed)
 	sk := kGen(seed)
@@ -67,15 +68,15 @@ func secretTest(t *testing.T, kGen secretKeyGenerator, sUm secretUnmarshaller){
 	ok = secretEncDecTest(t, sk2)
 	assertError(t, ok, "marshal-unmarshal secret error")
 }
-func TestSecret(t *testing.T){
-	aesNewKey := func(seed []byte) isec.ISecretKey{
+func TestSecret(t *testing.T) {
+	aesNewKey := func(seed []byte) isec.ISecretKey {
 		tmp := [isec.SecretKeySize]byte{}
 		copy(tmp[:], seed)
 		return aes.NewSecretKey(tmp)
 	}
 	secretTest(t, aesNewKey, aes.UnmarshalSecretKey)
 
-	chaNewKey := func(seed []byte) isec.ISecretKey{
+	chaNewKey := func(seed []byte) isec.ISecretKey {
 		tmp := [isec.SecretKeySize]byte{}
 		copy(tmp[:], seed)
 		return chacha.NewSecretKey(tmp)
@@ -84,16 +85,19 @@ func TestSecret(t *testing.T){
 	secretTest(t, mchacha.NewSecretKey, mchacha.UnmarshalSecretKey)
 }
 
-func cipherTest(t *testing.T, pub iexch.IPubKey, priv iexch.IPriKey) bool{
+/*
+func cipherTest(t *testing.T, pub iexch.IPubKey, priv iexch.IPriKey) bool {
 	cipher, share, err := pub.Encrypt()
 	checkError(t, err)
 	share2, err := priv.Decrypt(cipher)
 	checkError(t, err)
 	return string(share) == string(share2)
 }
+
 type exPriUnmarshaller func([]byte) (iexch.IPriKey, error)
 type exPubUnmarshaller func([]byte) (iexch.IPubKey, error)
-func exchTest(t *testing.T, kp iexch.IExchangeKeyPair, pru exPriUnmarshaller, puu exPubUnmarshaller){
+
+func exchTest(t *testing.T, kp iexch.IExchangeKeyPair, pru exPriUnmarshaller, puu exPubUnmarshaller) {
 	pub := kp.Public()
 	priv := kp.Private()
 
@@ -117,13 +121,13 @@ func exchTest(t *testing.T, kp iexch.IExchangeKeyPair, pru exPriUnmarshaller, pu
 	ok = cipherTest(t, pub, priv2)
 	assertError(t, ok, "marshal-unmarshal priv error")
 }
-func TestExch(t *testing.T){
+func TestExch(t *testing.T) {
 	exchTest(t, sidh.NewKeyPair(), sidh.UnmarshalPriKey, sidh.UnmarshalPubKey)
 	exchTest(t, ntru.NewKeyPair(), ntru.UnmarshalPriKey, ntru.UnmarshalPubKey)
 }
+*/
 
-
-func encDecTest(t *testing.T, pub ipub.IPubKey, priv ipub.IPriKey) bool{
+func encDecTest(t *testing.T, pub ipub.IPubKey, priv ipub.IPriKey) bool {
 	data := []byte("meow meow ^_^")
 	enc, err := pub.Encrypt(data)
 	checkError(t, err)
@@ -131,9 +135,11 @@ func encDecTest(t *testing.T, pub ipub.IPubKey, priv ipub.IPriKey) bool{
 	checkError(t, err)
 	return string(data) == string(dec)
 }
+
 type priUnmarshaller func([]byte) (ipub.IPriKey, error)
 type pubUnmarshaller func([]byte) (ipub.IPubKey, error)
-func pubTest(t *testing.T, kp ipub.IPubEncryptKeyPair, pru priUnmarshaller, puu pubUnmarshaller){
+
+func pubTest(t *testing.T, kp ipub.IPubEncryptKeyPair, pru priUnmarshaller, puu pubUnmarshaller) {
 	pub := kp.Public()
 	priv := kp.Private()
 
@@ -157,14 +163,13 @@ func pubTest(t *testing.T, kp ipub.IPubEncryptKeyPair, pru priUnmarshaller, puu 
 	ok = encDecTest(t, pub, priv2)
 	assertError(t, ok, "marshal-unmarshal priv error")
 }
-func TestPub(t *testing.T){
+func TestPub(t *testing.T) {
 	pubTest(t, ecies.NewKeyPair(), ecies.UnmarshalPriKey, ecies.UnmarshalPubKey)
-	pubTest(t, psidh.NewKeyPair(), psidh.UnmarshalPriKey, psidh.UnmarshalPubKey)
-	pubTest(t, pntru.NewKeyPair(), pntru.UnmarshalPriKey, pntru.UnmarshalPubKey)
+	//pubTest(t, psidh.NewKeyPair(), psidh.UnmarshalPriKey, psidh.UnmarshalPubKey)
+	//pubTest(t, pntru.NewKeyPair(), pntru.UnmarshalPriKey, pntru.UnmarshalPubKey)
 }
 
-
-func signVerifyTest(t *testing.T, sk isign.ISignKey, vk isign.IVerfKey) bool{
+func signVerifyTest(t *testing.T, sk isign.ISignKey, vk isign.IVerfKey) bool {
 	data := []byte("meow meow ^_^")
 	sig, err := sk.Sign(data)
 	checkError(t, err)
@@ -172,9 +177,11 @@ func signVerifyTest(t *testing.T, sk isign.ISignKey, vk isign.IVerfKey) bool{
 	checkError(t, err)
 	return ok
 }
+
 type signUnmarshaller func([]byte) (isign.ISignKey, error)
 type verfUnmarshaller func([]byte) (isign.IVerfKey, error)
-func signTest(t *testing.T, kp isign.ISignKeyPair, sum signUnmarshaller, vum verfUnmarshaller){
+
+func signTest(t *testing.T, kp isign.ISignKeyPair, sum signUnmarshaller, vum verfUnmarshaller) {
 	sk := kp.Sign()
 	vk := kp.Verify()
 
@@ -198,10 +205,8 @@ func signTest(t *testing.T, kp isign.ISignKeyPair, sum signUnmarshaller, vum ver
 	ok = signVerifyTest(t, sk, vk2)
 	assertError(t, ok, "marshal-unmarshal verify error")
 }
-func TestSign(t *testing.T){
+func TestSign(t *testing.T) {
 	signTest(t, ed25519.NewKeyPair(), ed25519.UnmarshalSignKey, ed25519.UnmarshalVerfKey)
-	signTest(t, sphincs.NewKeyPair(), sphincs.UnmarshalSignKey, sphincs.UnmarshalVerfKey)
-	signTest(t, falcon.NewKeyPair(), falcon.UnmarshalSignKey, falcon.UnmarshalVerfKey)
+	//signTest(t, sphincs.NewKeyPair(), sphincs.UnmarshalSignKey, sphincs.UnmarshalVerfKey)
+	//signTest(t, falcon.NewKeyPair(), falcon.UnmarshalSignKey, falcon.UnmarshalVerfKey)
 }
-
-

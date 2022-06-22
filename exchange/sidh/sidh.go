@@ -1,12 +1,13 @@
 package sidh
 
+/*
 import (
 	"errors"
-	
+
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	iexch "github.com/pilinsin/util/exchange"
+	pb "github.com/pilinsin/util/pb"
 	proto "google.golang.org/protobuf/proto"
-	pb "github.com/pilinsin/util/crypto/pb"
-	iexch "github.com/pilinsin/util/crypto/exchange"
 )
 
 type sidhKeyPair struct {
@@ -59,7 +60,7 @@ func (pri *sidhPriKey) Decrypt(m []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer oqsMan.Clean()
-	
+
 	//share: secret infomation
 	return oqsMan.DecapSecret(m)
 }
@@ -82,7 +83,7 @@ func (pri *sidhPriKey) Unmarshal(m []byte) error {
 	pri.cipherSize = int(mpri.GetSize())
 	return nil
 }
-func UnmarshalPriKey(m []byte) (iexch.IPriKey, error){
+func UnmarshalPriKey(m []byte) (iexch.IPriKey, error) {
 	pri := &sidhPriKey{}
 	err := pri.Unmarshal(m)
 	return pri, err
@@ -125,9 +126,10 @@ func (pub *sidhPubKey) Unmarshal(m []byte) error {
 	pub.mode = mpub.GetMode()
 	return nil
 }
-func UnmarshalPubKey(m []byte) (iexch.IPubKey, error){
+func UnmarshalPubKey(m []byte) (iexch.IPubKey, error) {
 	pub := &sidhPubKey{}
 	err := pub.Unmarshal(m)
 	return pub, err
 }
 
+*/

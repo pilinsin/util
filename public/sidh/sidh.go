@@ -1,13 +1,14 @@
 package sidh
 
+/*
 import (
 	"errors"
-	
+
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	pb "github.com/pilinsin/util/pb"
+	ipub "github.com/pilinsin/util/public"
+	mchacha "github.com/pilinsin/util/secret/multichacha"
 	proto "google.golang.org/protobuf/proto"
-	pb "github.com/pilinsin/util/crypto/pb"
-	ipub "github.com/pilinsin/util/crypto/public"
-	mchacha "github.com/pilinsin/util/crypto/secret/multichacha"
 )
 
 type sidhKeyPair struct {
@@ -86,7 +87,7 @@ func (pri *sidhPriKey) Unmarshal(m []byte) error {
 	pri.cipherSize = int(mpri.GetSize())
 	return nil
 }
-func UnmarshalPriKey(m []byte) (ipub.IPriKey, error){
+func UnmarshalPriKey(m []byte) (ipub.IPriKey, error) {
 	pri := &sidhPriKey{}
 	err := pri.Unmarshal(m)
 	return pri, err
@@ -128,9 +129,9 @@ func (pub *sidhPubKey) Unmarshal(m []byte) error {
 	pub.mode = mpub.GetMode()
 	return nil
 }
-func UnmarshalPubKey(m []byte) (ipub.IPubKey, error){
+func UnmarshalPubKey(m []byte) (ipub.IPubKey, error) {
 	pub := &sidhPubKey{}
 	err := pub.Unmarshal(m)
 	return pub, err
 }
-
+*/

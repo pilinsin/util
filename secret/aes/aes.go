@@ -1,12 +1,12 @@
 package aes
 
 import (
-	"errors"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"errors"
 
-	isec "github.com/pilinsin/util/crypto/secret"
+	isec "github.com/pilinsin/util/secret"
 )
 
 type aesSecretKey struct {
@@ -34,17 +34,17 @@ func (key aesSecretKey) Decrypt(m []byte) ([]byte, error) {
 		block, _ = aes.NewCipher(isec.RandBytes(isec.SecretKeySize))
 	}
 	aead, _ := cipher.NewGCMWithNonceSize(block, isec.NonceSize)
-	
-	if len(m) < isec.NonceSize + isec.Overhead {
+
+	if len(m) < isec.NonceSize+isec.Overhead {
 		err = errors.New("ciphertext too short")
 		m = append(isec.RandBytes(isec.NonceSize+isec.Overhead), m...)
 	}
 
 	nonce, cipher := m[:isec.NonceSize], m[isec.NonceSize:]
-	if data, opErr := aead.Open(nil, nonce, cipher, nil); opErr != nil{
+	if data, opErr := aead.Open(nil, nonce, cipher, nil); opErr != nil {
 		data = isec.RandBytes(len(cipher) - isec.Overhead)
 		return data, opErr
-	}else{
+	} else {
 		return data, err
 	}
 }
@@ -60,7 +60,7 @@ func (key *aesSecretKey) Unmarshal(m []byte) error {
 	return nil
 }
 
-func UnmarshalSecretKey(m []byte) (isec.ISecretKey, error){
+func UnmarshalSecretKey(m []byte) (isec.ISecretKey, error) {
 	sk := &aesSecretKey{}
 	err := sk.Unmarshal(m)
 	return sk, err

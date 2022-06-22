@@ -1,13 +1,13 @@
-package ntru
+package sidh
 
+/*
 import (
 	"errors"
-	
+
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	iexch "github.com/pilinsin/util/exchange"
+	pb "github.com/pilinsin/util/pb"
 	proto "google.golang.org/protobuf/proto"
-	pb "github.com/pilinsin/util/crypto/pb"
-	ipub "github.com/pilinsin/util/crypto/public"
-	mchacha "github.com/pilinsin/util/crypto/secret/multichacha"
 )
 
 type ntruKeyPair struct {
@@ -15,7 +15,7 @@ type ntruKeyPair struct {
 	priKey *ntruPriKey
 }
 
-func NewKeyPair() ipub.IPubEncryptKeyPair {
+func NewKeyPair() iexch.IExchangeKeyPair {
 	mode := "NTRU-HPS-4096-821"
 	cipherSize := 1230
 
@@ -33,10 +33,10 @@ func NewKeyPair() ipub.IPubEncryptKeyPair {
 	priKey := &ntruPriKey{pri, mode, cipherSize}
 	return &ntruKeyPair{pubKey, priKey}
 }
-func (kp *ntruKeyPair) Private() ipub.IPriKey {
+func (kp *ntruKeyPair) Private() iexch.IPriKey {
 	return kp.priKey
 }
-func (kp *ntruKeyPair) Public() ipub.IPubKey {
+func (kp *ntruKeyPair) Public() iexch.IPubKey {
 	return kp.pubKey
 }
 
@@ -47,10 +47,9 @@ type ntruPriKey struct {
 }
 
 func (pri *ntruPriKey) Decrypt(m []byte) ([]byte, error) {
-	if len(m) <= pri.cipherSize {
+	if len(m) != pri.cipherSize {
 		return nil, errors.New("decrypt fail: len(m) <= cipherSize")
 	}
-	cipher, enc := m[:pri.cipherSize], m[pri.cipherSize:]
 
 	priKey := make([]byte, len(pri.priKey))
 	copy(priKey, pri.priKey)
@@ -61,11 +60,9 @@ func (pri *ntruPriKey) Decrypt(m []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer oqsMan.Clean()
-	share, err := oqsMan.DecapSecret(cipher)
-	if err != nil {
-		return nil, err
-	}
-	return mchacha.NewSecretKey(share).Decrypt(enc)
+
+	//share: secret infomation
+	return oqsMan.DecapSecret(m)
 }
 func (pri *ntruPriKey) Raw() ([]byte, error) {
 	mpri := &pb.OqsPriKey{
@@ -86,31 +83,31 @@ func (pri *ntruPriKey) Unmarshal(m []byte) error {
 	pri.cipherSize = int(mpri.GetSize())
 	return nil
 }
-func UnmarshalPriKey(m []byte) (ipub.IPriKey, error){
+func UnmarshalPriKey(m []byte) (iexch.IPriKey, error) {
 	pri := &ntruPriKey{}
 	err := pri.Unmarshal(m)
 	return pri, err
 }
-
 
 type ntruPubKey struct {
 	pubKey []byte
 	mode   string
 }
 
-func (pub *ntruPubKey) Encrypt(data []byte) ([]byte, error) {
+func (pub *ntruPubKey) Encrypt() ([]byte, []byte, error) {
 	mode := pub.mode
 	oqsMan := oqs.KeyEncapsulation{}
 	if err := oqsMan.Init(mode, nil); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer oqsMan.Clean()
 	cipher, share, err := oqsMan.EncapSecret(pub.pubKey)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	enc, err := mchacha.NewSecretKey(share).Encrypt(data)
-	return append(cipher, enc...), err
+
+	//cipher: public, share: private
+	return cipher, share, nil
 }
 func (pub *ntruPubKey) Raw() ([]byte, error) {
 	mpub := &pb.OqsKey{
@@ -129,8 +126,9 @@ func (pub *ntruPubKey) Unmarshal(m []byte) error {
 	pub.mode = mpub.GetMode()
 	return nil
 }
-func UnmarshalPubKey(m []byte) (ipub.IPubKey, error){
+func UnmarshalPubKey(m []byte) (iexch.IPubKey, error) {
 	pub := &ntruPubKey{}
 	err := pub.Unmarshal(m)
 	return pub, err
 }
+*/

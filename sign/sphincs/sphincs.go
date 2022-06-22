@@ -1,19 +1,20 @@
-package falcon
+package sphincs
 
+/*
 import (
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	pb "github.com/pilinsin/util/pb"
+	isign "github.com/pilinsin/util/sign"
 	proto "google.golang.org/protobuf/proto"
-	pb "github.com/pilinsin/util/crypto/pb"
-	isign "github.com/pilinsin/util/crypto/sign"
 )
 
-type falconKeyPair struct {
-	signKey *falconSignKey
-	verfKey *falconVerfKey
+type sphincsKeyPair struct {
+	signKey *sphincsSignKey
+	verfKey *sphincsVerfKey
 }
 
 func NewKeyPair() isign.ISignKeyPair {
-	mode := "Falcon-1024"
+	mode := "SPHINCS+-SHAKE256-256s-robust"
 
 	oqsMan := oqs.Signature{}
 	defer oqsMan.Clean()
@@ -25,22 +26,23 @@ func NewKeyPair() isign.ISignKeyPair {
 	sign := make([]byte, len(sk))
 	copy(sign, sk)
 
-	verfKey := &falconVerfKey{verf, mode}
-	signKey := &falconSignKey{sign, mode}
-	return &falconKeyPair{signKey, verfKey}
+	verfKey := &sphincsVerfKey{verf, mode}
+	signKey := &sphincsSignKey{sign, mode}
+	return &sphincsKeyPair{signKey, verfKey}
 }
-func (kp *falconKeyPair) Sign() isign.ISignKey {
+func (kp *sphincsKeyPair) Sign() isign.ISignKey {
 	return kp.signKey
 }
-func (kp *falconKeyPair) Verify() isign.IVerfKey {
+func (kp *sphincsKeyPair) Verify() isign.IVerfKey {
 	return kp.verfKey
 }
 
-type falconSignKey struct {
+type sphincsSignKey struct {
 	signKey []byte
 	mode    string
 }
-func (sk *falconSignKey) Sign(data []byte) ([]byte, error) {
+
+func (sk *sphincsSignKey) Sign(data []byte) ([]byte, error) {
 	signKey := make([]byte, len(sk.signKey))
 	copy(signKey, sk.signKey)
 	mode := sk.mode
@@ -52,7 +54,7 @@ func (sk *falconSignKey) Sign(data []byte) ([]byte, error) {
 	}
 	return oqsMan.Sign(data)
 }
-func (sk *falconSignKey) Raw() ([]byte, error) {
+func (sk *sphincsSignKey) Raw() ([]byte, error) {
 	marshalSignKey := &pb.OqsKey{
 		Data: sk.signKey,
 		Mode: sk.mode,
@@ -60,7 +62,7 @@ func (sk *falconSignKey) Raw() ([]byte, error) {
 	m, err := proto.Marshal(marshalSignKey)
 	return m, err
 }
-func (sk *falconSignKey) Unmarshal(m []byte) error {
+func (sk *sphincsSignKey) Unmarshal(m []byte) error {
 	marshalSignKey := &pb.OqsKey{}
 	if err := proto.Unmarshal(m, marshalSignKey); err != nil {
 		return err
@@ -69,18 +71,18 @@ func (sk *falconSignKey) Unmarshal(m []byte) error {
 	sk.mode = marshalSignKey.GetMode()
 	return nil
 }
-func UnmarshalSignKey(m []byte) (isign.ISignKey, error){
-	sk := &falconSignKey{}
+func UnmarshalSignKey(m []byte) (isign.ISignKey, error) {
+	sk := &sphincsSignKey{}
 	err := sk.Unmarshal(m)
 	return sk, err
 }
 
-type falconVerfKey struct {
+type sphincsVerfKey struct {
 	verfKey []byte
 	mode    string
 }
 
-func (vk *falconVerfKey) Verify(data, sign []byte) (bool, error) {
+func (vk *sphincsVerfKey) Verify(data, sign []byte) (bool, error) {
 	mode := vk.mode
 
 	oqsMan := oqs.Signature{}
@@ -90,7 +92,7 @@ func (vk *falconVerfKey) Verify(data, sign []byte) (bool, error) {
 	}
 	return oqsMan.Verify(data, sign, vk.verfKey)
 }
-func (vk *falconVerfKey) Raw() ([]byte, error) {
+func (vk *sphincsVerfKey) Raw() ([]byte, error) {
 	marshalVerfKey := &pb.OqsKey{
 		Data: vk.verfKey,
 		Mode: vk.mode,
@@ -98,7 +100,7 @@ func (vk *falconVerfKey) Raw() ([]byte, error) {
 	m, err := proto.Marshal(marshalVerfKey)
 	return m, err
 }
-func (vk *falconVerfKey) Unmarshal(m []byte) error {
+func (vk *sphincsVerfKey) Unmarshal(m []byte) error {
 	marshalVerfKey := &pb.OqsKey{}
 	if err := proto.Unmarshal(m, marshalVerfKey); err != nil {
 		return err
@@ -108,8 +110,9 @@ func (vk *falconVerfKey) Unmarshal(m []byte) error {
 	vk.mode = marshalVerfKey.GetMode()
 	return nil
 }
-func UnmarshalVerfKey(m []byte) (isign.IVerfKey, error){
-	sk := &falconVerfKey{}
+func UnmarshalVerfKey(m []byte) (isign.IVerfKey, error) {
+	sk := &sphincsVerfKey{}
 	err := sk.Unmarshal(m)
 	return sk, err
 }
+*/

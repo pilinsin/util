@@ -1,12 +1,12 @@
 package multichachapoly
 
 import (
+	pb "github.com/pilinsin/util/pb"
 	proto "google.golang.org/protobuf/proto"
-	pb "github.com/pilinsin/util/crypto/pb"
 
-	isec "github.com/pilinsin/util/crypto/secret"
-	chacha "github.com/pilinsin/util/crypto/secret/chacha"
-	hash "github.com/pilinsin/util/crypto/hash"
+	hash "github.com/pilinsin/util/hash"
+	isec "github.com/pilinsin/util/secret"
+	chacha "github.com/pilinsin/util/secret/chacha"
 )
 
 func arange(start, stop, step int) []int {
@@ -37,13 +37,13 @@ func multiSeedPadding(seed []byte) []byte {
 	return hash.HashWithSize(seed, salt, paddedSize)
 }
 func splitMultiSecretKeySeed(seed []byte) [][isec.SecretKeySize]byte {
-	if len(seed)%isec.SecretKeySize != 0{
+	if len(seed)%isec.SecretKeySize != 0 {
 		return nil
 	}
 	nSeeds := len(seed) / isec.SecretKeySize
 
 	seeds := make([][isec.SecretKeySize]byte, nSeeds)
-	for idx, _ := range seeds {
+	for idx := range seeds {
 		begin := idx * isec.SecretKeySize
 		end := (idx + 1) * isec.SecretKeySize
 		copy(seeds[idx][:], seed[begin:end])
@@ -52,7 +52,7 @@ func splitMultiSecretKeySeed(seed []byte) [][isec.SecretKeySize]byte {
 }
 func reverse(seeds [][isec.SecretKeySize]byte) [][isec.SecretKeySize]byte {
 	seeds2 := make([][isec.SecretKeySize]byte, len(seeds))
-	for idx, _ := range seeds {
+	for idx := range seeds {
 		seeds2[len(seeds)-1-idx] = seeds[idx]
 	}
 	return seeds2
@@ -91,7 +91,7 @@ func (key multiChachaSecretKey) Decrypt(m []byte) ([]byte, error) {
 
 func (key multiChachaSecretKey) Raw() ([]byte, error) {
 	seeds := make([][]byte, len(key.seeds))
-	for idx, seed := range key.seeds{
+	for idx, seed := range key.seeds {
 		seeds[idx] = seed[:]
 	}
 	mSeeds := &pb.MultiChachaKey{
@@ -107,14 +107,14 @@ func (key *multiChachaSecretKey) Unmarshal(m []byte) error {
 	}
 
 	seeds := make([][isec.SecretKeySize]byte, len(mSeeds.GetSeeds()))
-	for idx, seed := range mSeeds.GetSeeds(){
+	for idx, seed := range mSeeds.GetSeeds() {
 		copy(seeds[idx][:], seed)
 	}
 
 	key.seeds = seeds
 	return nil
 }
-func UnmarshalSecretKey(m []byte) (isec.ISecretKey, error){
+func UnmarshalSecretKey(m []byte) (isec.ISecretKey, error) {
 	sk := &multiChachaSecretKey{}
 	err := sk.Unmarshal(m)
 	return sk, err

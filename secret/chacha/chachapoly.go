@@ -1,12 +1,12 @@
 package chachapoly
 
 import (
-	"errors"
 	"crypto/rand"
+	"errors"
 
 	chacha "golang.org/x/crypto/chacha20poly1305"
-	
-	isec "github.com/pilinsin/util/crypto/secret"
+
+	isec "github.com/pilinsin/util/secret"
 )
 
 type chachaSecretKey struct {
@@ -37,10 +37,10 @@ func (key chachaSecretKey) Decrypt(m []byte) ([]byte, error) {
 	}
 
 	nonce, cipher := m[:isec.NonceSize], m[isec.NonceSize:]
-	if data, opErr := aead.Open(nil, nonce, cipher, nil); opErr != nil{
+	if data, opErr := aead.Open(nil, nonce, cipher, nil); opErr != nil {
 		data = isec.RandBytes(len(cipher) - isec.Overhead)
 		return data, opErr
-	}else{
+	} else {
 		return data, err
 	}
 }
@@ -55,7 +55,7 @@ func (key *chachaSecretKey) Unmarshal(m []byte) error {
 	key.seed = m
 	return nil
 }
-func UnmarshalSecretKey(m []byte) (isec.ISecretKey, error){
+func UnmarshalSecretKey(m []byte) (isec.ISecretKey, error) {
 	sk := &chachaSecretKey{}
 	err := sk.Unmarshal(m)
 	return sk, err
