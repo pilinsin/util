@@ -2,6 +2,7 @@ package ecies
 
 import (
 	"errors"
+
 	eciesgo "github.com/ecies/go/v2"
 	ipub "github.com/pilinsin/util/public"
 )
@@ -34,8 +35,12 @@ func (key *eciesPriKey) Raw() ([]byte, error) {
 	return key.priKey.Bytes(), nil
 }
 func (key *eciesPriKey) Unmarshal(b []byte) error {
-	if len(b) == 0{return errors.New("invalid IPriKey")}
-	if len(b) > 32{return errors.New("invalid IPriKey")}
+	if len(b) == 0 {
+		return errors.New("invalid IPriKey")
+	}
+	if len(b) > 32 {
+		return errors.New("invalid IPriKey")
+	}
 	pri := eciesgo.NewPrivateKeyFromBytes(b)
 	key.priKey = pri
 	return nil
@@ -57,8 +62,12 @@ func (key *eciesPubKey) Raw() ([]byte, error) {
 	return key.pubKey.Bytes(true), nil
 }
 func (key *eciesPubKey) Unmarshal(b []byte) error {
-	if len(b) == 0{return errors.New("invalid IPubKey")}
-	if len(b) > 33{return errors.New("invalid IPubKey")}
+	if len(b) == 0 {
+		return errors.New("invalid IPubKey")
+	}
+	if len(b) > 33 {
+		return errors.New("invalid IPubKey")
+	}
 	pub, err := eciesgo.NewPublicKeyFromBytes(b)
 	if err == nil {
 		key.pubKey = pub
